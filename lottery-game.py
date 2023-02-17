@@ -28,9 +28,72 @@ def selecting_first_numbers():
 
     return player_list
 
-# def reroll(player_list,correct_values,incorrect_values):
-#     for i,val in enumerate(incorrect_values):
+def separate_win_lose_numbers(player_list,lottery_draw):
+    # Seperating Values into Correct/Incorrect Lists
+    correct_values = []
+    incorrect_values = []
+    for val in player_list:
+        if val in lottery_draw:
+            correct_values.append(val)
+        elif val not in lottery_draw:
+            incorrect_values.append(val)
+    return correct_values,incorrect_values
 
+def check_win(
+        player_list,
+        lottery_draw,
+        correct_values,
+        incorrect_values,
+        prev_correct
+        ):
+
+    # Checking numbers for win condition
+    if len(correct_values) < 6:
+        if len(correct_values) > prev_correct:
+            print(f"\nUnlucky... You only got {len(correct_values)}/6 correct\n")
+            print(f"But you will have a chance to re-roll in the Bonus Round!")
+            prev_correct = len(correct_values)
+            reroll(
+                player_list,
+                lottery_draw,
+                correct_values,
+                incorrect_values,
+                prev_correct
+                )
+        else:
+            print("Game Over -- Unlucky...You didn't hit any new numbers...")
+            print(f"Your numbers: {player_list} -- Lottery numbers: {lottery_draw}")
+
+    elif len(correct_values) == 6:
+        print(f"The Winning Lottery Draw: {lottery_draw}")
+        print("\nCongrats! You are the Winner!\n")
+
+
+def reroll(
+        player_list,
+        lottery_draw,
+        correct_values,
+        incorrect_values,
+        prev_correct
+        ):
+
+    num = 0
+    print(f'You get to re-roll the {len(incorrect_values)} incorrect numbers ({incorrect_values})')
+    for i,val in enumerate(incorrect_values):
+        while num < 1 or num > 50 or num in player_list or type(num) != int:
+            num = int(input(f"{i}: Re-roll a number between 1-50: "))
+            error_message(num,player_list)
+        player_list = [num if n == val else n for n in player_list]
+        print(player_list)
+        num = 0
+    
+    check_win(
+            player_list,
+            lottery_draw,
+            correct_values,
+            incorrect_values,
+            prev_correct
+            )
 
 def main():
 
@@ -40,23 +103,19 @@ def main():
     # Creating the Lottery Draw
     lottery_draw = r.sample(range(1,50),6)
 
-    # Seperating Values into Correct/Incorrect Lists
-    correct_values = []
-    incorrect_values = []
-    for val in player_list:
-        if val in lottery_draw:
-            correct_values.append(val)
-        elif val not in lottery_draw:
-            incorrect_values.append(val)
+    # Sorting numbers into Lists
+    [correct_values,incorrect_values] = separate_win_lose_numbers(player_list,lottery_draw)
 
-    # Checking numbers for win condition
-    if len(correct_values) < 6:
-        print(f"\nUnlucky... You only got {len(correct_values)}/6 correct\n")
-        print(f"But you will have a chance to re-roll in the Bonus Round!")
-        # reroll()
-    elif len(correct_values) == 6:
-        print(f"The Winning Lottery Draw: {lottery_draw}")
-        print("\nCongrats! You are the Winner!\n")
+    # Adding variable to count previous correct answers to enable re-roll logic
+    prev_correct = 0
+
+    check_win(
+            player_list,
+            lottery_draw,
+            correct_values,
+            incorrect_values,
+            prev_correct
+            )
 
 if __name__ == "__main__":
     main()
