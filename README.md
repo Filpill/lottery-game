@@ -1,5 +1,13 @@
 # Lottery Game
+
+<p align = center>
+<img src="https://github.com/Filpill/lottery-game/blob/main/lottery_hugo.png">
+
+<p/>
+
+<p align = center>
 A game where you test your luck -- Pick some numbers and try to win!
+<p/>
 
 ```mermaid
 flowchart LR
@@ -15,8 +23,3 @@ check2 --Yes--> check3{Are they\n all matching?}
 check3 --No--> reroll
 check3 --Yes--> win
 ```
-
-<p align = center>
-<img src="https://github.com/Filpill/lottery-game/blob/main/lotteryBalls.jpg">
-<p/>
-
